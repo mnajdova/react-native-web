@@ -4,21 +4,16 @@ import AppRegistry from '..';
 import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { render } from 'enzyme';
+import { render } from '@testing-library/react';
 import StyleSheet from '../../StyleSheet';
 import Text from '../../Text';
 import View from '../../View';
 
+const canUseDOM = ExecutionEnvironment.canUseDOM;
 const NoopComponent = () => <div />;
-
-const styles = StyleSheet.create({ root: { borderWidth: 1234, backgroundColor: 'purple' } });
-const RootComponent = () => <View />;
-const AlternativeComponent = () => <Text style={styles.root} />;
 
 describe('AppRegistry', () => {
   describe('getApplication', () => {
-    const canUseDOM = ExecutionEnvironment.canUseDOM;
-
     beforeEach(() => {
       ExecutionEnvironment.canUseDOM = false;
     });
@@ -56,6 +51,10 @@ describe('AppRegistry', () => {
         return getStyleElement().props.dangerouslySetInnerHTML.__html;
       };
 
+      const styles = StyleSheet.create({ root: { borderWidth: 1234, backgroundColor: 'purple' } });
+      const RootComponent = () => <View />;
+      const AlternativeComponent = () => <Text style={styles.root} />;
+
       // First render "RootComponent"
       AppRegistry.registerComponent('App', () => RootComponent);
       const first = getApplicationStyles('App');
@@ -73,19 +72,23 @@ describe('AppRegistry', () => {
   });
 
   describe('runApplication', () => {
-    test('callback after render', () => {
-      // setup
-      const rootTag = document.createElement('div');
+    let rootTag;
+
+    beforeEach(() => {
+      rootTag = document.createElement('div');
       rootTag.id = 'react-root';
       document.body.appendChild(rootTag);
+    });
 
+    afterEach(() => {
+      document.body.removeChild(rootTag);
+    });
+
+    test('callback after render', () => {
       const callback = jest.fn();
       AppRegistry.registerComponent('App', () => NoopComponent);
       AppRegistry.runApplication('App', { initialProps: {}, rootTag, callback });
       expect(callback).toHaveBeenCalledTimes(1);
-
-      // cleanup
-      document.body.removeChild(rootTag);
     });
   });
 });

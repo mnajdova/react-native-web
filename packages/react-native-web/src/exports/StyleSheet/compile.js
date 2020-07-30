@@ -75,7 +75,7 @@ export function atomic(style: Style): CompilerOutput {
 
 /**
  * Compile simple style object to classic CSS rules.
- * No support for 'placeholderTextColor' or 'pointerEvents'.
+ * No support for 'placeholderTextColor', 'scrollbarWidth', or 'pointerEvents'.
  */
 export function classic(style: Style, name: string): CompilerOutput {
   const identifier = createIdentifier('css', name, style);
@@ -97,7 +97,7 @@ export function classic(style: Style, name: string): CompilerOutput {
 
 /**
  * Compile simple style object to inline DOM styles.
- * No support for 'animationKeyframes', 'placeholderTextColor', or 'pointerEvents'.
+ * No support for 'animationKeyframes', 'placeholderTextColor', 'scrollbarWidth', or 'pointerEvents'.
  */
 export function inline(style: Style) {
   return prefixInlineStyles(createReactDOMStyle(style));
@@ -133,6 +133,7 @@ function createAtomicRules(identifier: string, property, value): Rules {
       break;
     }
 
+    // Equivalent to using '::placeholder'
     case 'placeholderTextColor': {
       const block = createDeclarationBlock({ color: value, opacity: 1 });
       rules.push(
@@ -144,7 +145,8 @@ function createAtomicRules(identifier: string, property, value): Rules {
       break;
     }
 
-    // See #513
+    // Polyfill for additional 'pointer-events' values
+    // See d13f78622b233a0afc0c7a200c0a0792c8ca9e58
     case 'pointerEvents': {
       let finalValue = value;
       if (value === 'auto' || value === 'box-only') {
@@ -161,6 +163,20 @@ function createAtomicRules(identifier: string, property, value): Rules {
         }
       }
       const block = createDeclarationBlock({ [property]: finalValue });
+      rules.push(`${selector}${block}`);
+      break;
+    }
+
+    // Polyfill for draft spec
+    // https://drafts.csswg.org/css-scrollbars-1/
+    case 'scrollbarWidth': {
+      if (value === 'none') {
+        rules.push(
+          `${selector}::-webkit-scrollbar{display:none}`,
+          `${selector}{overflow:-moz-scrollbars-none;-ms-overflow-style:none;}`
+        );
+      }
+      const block = createDeclarationBlock({ [property]: value });
       rules.push(`${selector}${block}`);
       break;
     }
@@ -241,7 +257,7 @@ function createKeyframes(keyframes) {
  */
 function processKeyframesValue(keyframesValue) {
   if (typeof keyframesValue === 'number') {
-    throw new Error('Invalid CSS keyframes type');
+    throw new Error(`Invalid CSS keyframes type: ${typeof keyframesValue}`);
   }
 
   const animationNames = [];

@@ -3,7 +3,7 @@
     "react": {
       "pragma": "React",
       "version": "16.6",
-      "flowVersion": "0.78" // Flow version
+      "flowVersion": "0.109.0" // Flow version
     }
   },
   // babel parser to support ES6/7 features
@@ -17,32 +17,23 @@
     "sourceType": "module"
   },
   "extends": [
+    "plugin:flowtype/recommended",
     "prettier",
     "prettier/react"
   ],
   "plugins": [
+    "flowtype",
     "promise",
-    "react"
+    "react",
+    "react-hooks"
   ],
   "env": {
+    "browser": true,
     "es6": true,
     "node": true
   },
   "globals": {
-    "document": false,
-    "navigator": false,
-    "window": false,
-    // Flow global types,
-    "$Enum": false,
-    "CSSStyleSheet": false,
-    "HTMLInputElement": false,
-    "ReactClass": false,
-    "ReactComponent": false,
-    "ReactElement": false,
-    "ReactPropsChainableTypeChecker": false,
-    "ReactPropsCheckType": false,
-    "ReactPropTypes": false,
-    "SyntheticEvent": false
+
   },
   "rules": {
     "camelcase": 0,
@@ -65,7 +56,6 @@
     "no-dupe-class-members": 2,
     "no-dupe-keys": 2,
     "no-duplicate-case": 2,
-    "no-duplicate-imports": 2,
     "no-empty-character-class": 2,
     "no-empty-pattern": 2,
     "no-eval": 2,
@@ -133,12 +123,16 @@
     "valid-typeof": 2,
     "yoda": [2, "never"],
 
+    // flow
+    "flowtype/generic-spacing": 0,
+    "flowtype/space-after-type-colon": 0,
+
     // promise
     "promise/param-names": 2,
 
     // react
     "react/display-name": 0,
-    "react/jsx-no-bind": 2,
+    "react/jsx-no-bind": 0,
     "react/jsx-no-duplicate-props": 2,
     "react/jsx-no-undef": 2,
     "react/jsx-pascal-case": 2,
@@ -152,11 +146,15 @@
     "react/no-string-refs": 2,
     "react/no-unknown-property": 2,
     "react/prefer-es6-class": 2,
-    "react/prop-types": 2,
+    "react/prop-types": 0,
     "react/react-in-jsx-scope": 0,
     "react/self-closing-comp": 2,
     "react/sort-comp": 0,
     "react/sort-prop-types": 2,
-    "react/wrap-multilines": 0
+    "react/wrap-multilines": 0,
+
+    // react-hooks
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }

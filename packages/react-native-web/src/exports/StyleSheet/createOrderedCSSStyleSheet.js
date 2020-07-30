@@ -143,13 +143,13 @@ function encodeGroupRule(group) {
 }
 
 function decodeGroupRule(cssRule) {
-  return Number(cssRule.selectorText.split('"')[1]);
+  return Number(cssRule.selectorText.split(/["']/)[1]);
 }
 
 function getOrderedGroups(obj: { [key: number]: any }) {
   return Object.keys(obj)
-    .sort()
-    .map(k => Number(k));
+    .map(Number)
+    .sort((a, b) => (a > b ? 1 : -1));
 }
 
 const pattern = /\s*([,])\s*/g;

@@ -8,10 +8,11 @@
  * @flow
  */
 
+import type { ComponentType } from 'react';
+
 import invariant from 'fbjs/lib/invariant';
 import unmountComponentAtNode from '../unmountComponentAtNode';
 import renderApplication, { getApplication } from './renderApplication';
-import type { ComponentType } from 'react';
 
 const emptyObject = {};
 const runnables = {};
@@ -63,10 +64,13 @@ export default class AppRegistry {
       run: appParameters =>
         renderApplication(
           componentProviderInstrumentationHook(componentProvider),
-          appParameters.initialProps || emptyObject,
-          appParameters.rootTag,
           wrapperComponentProvider && wrapperComponentProvider(appParameters),
-          appParameters.callback
+          appParameters.callback,
+          {
+            hydrate: appParameters.hydrate || false,
+            initialProps: appParameters.initialProps || emptyObject,
+            rootTag: appParameters.rootTag
+          }
         )
     };
     return appKey;
@@ -96,9 +100,10 @@ export default class AppRegistry {
       params.rootTag = `#${params.rootTag.id}`;
 
       console.log(
-        `Running application "${appKey}" with appParams: ${JSON.stringify(params)}.\n` +
-          `Development-level warnings: ${isDevelopment ? 'ON' : 'OFF'}.\n` +
-          `Performance optimizations: ${isDevelopment ? 'OFF' : 'ON'}.`
+        `Running application "${appKey}" with appParams:\n`,
+        params,
+        `\nDevelopment-level warnings: ${isDevelopment ? 'ON' : 'OFF'}.` +
+          `\nPerformance optimizations: ${isDevelopment ? 'OFF' : 'ON'}.`
       );
     }
 

@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import { createElement, StyleSheet } from 'react-native';
+import { unstable_createElement as createElement, StyleSheet } from 'react-native';
 
 const Dot = ({ size, x, y, children, color }) =>
   createElement('div', {
