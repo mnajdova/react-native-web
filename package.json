@@ -16,7 +16,6 @@
     "jest": "jest --config ./scripts/jest/config.js",
     "lint": "yarn lint:check --fix",
     "lint:check": "eslint packages scripts",
-    // "precommit": "lint-staged",
     "prerelease": "yarn test && yarn compile && yarn compile:commonjs",
     "release": "node ./scripts/release/publish.js",
     "postrelease": "yarn benchmarks:release && yarn docs:release",
