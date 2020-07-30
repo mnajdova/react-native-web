@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.28",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/styles": "^4.0.0-alpha.6",
     "aphrodite": "^2.4.0",
     "classnames": "^2.2.6",

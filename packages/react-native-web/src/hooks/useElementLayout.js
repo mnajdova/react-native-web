@@ -65,22 +65,19 @@ export default function useElementLayout(
 ) {
   const observer = getResizeObserver();
 
-  useLayoutEffect(
-    () => {
-      const node = ref.current;
-      if (node != null && observer != null && typeof onLayout === 'function') {
-        observer.observe(node);
+  useLayoutEffect(() => {
+    const node = ref.current;
+    if (node != null && observer != null && typeof onLayout === 'function') {
+      observer.observe(node);
+      // $FlowFixMe
+      node[DOM_LAYOUT_HANDLER_NAME] = onLayout;
+    }
+    return () => {
+      if (node != null && observer != null) {
+        observer.unobserve(node);
         // $FlowFixMe
-        node[DOM_LAYOUT_HANDLER_NAME] = onLayout;
+        delete node[DOM_LAYOUT_HANDLER_NAME];
       }
-      return () => {
-        if (node != null && observer != null) {
-          observer.unobserve(node);
-          // $FlowFixMe
-          delete node[DOM_LAYOUT_HANDLER_NAME];
-        }
-      };
-    },
-    [ref, onLayout, observer]
-  );
+    };
+  }, [ref, onLayout, observer]);
 }

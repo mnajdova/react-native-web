@@ -224,56 +224,53 @@ const Image = forwardRef<ImageProps, *>((props, ref) => {
   }
 
   // Image loading
-  useEffect(
-    () => {
-      abortPendingRequest();
+  useEffect(() => {
+    abortPendingRequest();
 
-      const uri = resolveAssetUri(source);
+    const uri = resolveAssetUri(source);
 
-      if (uri != null) {
-        updateState(LOADING);
-        if (onLoadStart) {
-          onLoadStart();
-        }
+    if (uri != null) {
+      updateState(LOADING);
+      if (onLoadStart) {
+        onLoadStart();
+      }
 
-        requestRef.current = ImageLoader.load(
-          uri,
-          function load(e) {
-            updateState(LOADED);
-            if (onLoad) {
-              onLoad();
-            }
-            if (onLoadEnd) {
-              onLoadEnd();
-            }
-          },
-          function error() {
-            updateState(ERRORED);
-            if (onError) {
-              onError({
-                nativeEvent: {
-                  error: `Failed to load resource ${uri} (404)`
-                }
-              });
-            }
-            if (onLoadEnd) {
-              onLoadEnd();
-            }
+      requestRef.current = ImageLoader.load(
+        uri,
+        function load(e) {
+          updateState(LOADED);
+          if (onLoad) {
+            onLoad();
           }
-        );
-      }
-
-      function abortPendingRequest() {
-        if (requestRef.current != null) {
-          ImageLoader.abort(requestRef.current);
-          requestRef.current = null;
+          if (onLoadEnd) {
+            onLoadEnd();
+          }
+        },
+        function error() {
+          updateState(ERRORED);
+          if (onError) {
+            onError({
+              nativeEvent: {
+                error: `Failed to load resource ${uri} (404)`
+              }
+            });
+          }
+          if (onLoadEnd) {
+            onLoadEnd();
+          }
         }
-      }
+      );
+    }
 
-      return abortPendingRequest;
-    },
-    [source, requestRef, updateState, onError, onLoad, onLoadEnd, onLoadStart]
-  );
+    function abortPendingRequest() {
+      if (requestRef.current != null) {
+        ImageLoader.abort(requestRef.current);
+        requestRef.current = null;
+      }
+    }
+
+    return abortPendingRequest;
+  }, [source, requestRef, updateState, onError, onLoad, onLoadEnd, onLoadStart]);
 
   return (
     <View
