@@ -23,23 +23,17 @@ export default function usePressEvents(hostRef: any, config: PressResponderConfi
   const pressResponder = pressResponderRef.current;
 
   // Re-configure to use the current node and configuration.
-  useEffect(
-    () => {
-      pressResponder.configure(config);
-    },
-    [config, pressResponder]
-  );
+  useEffect(() => {
+    pressResponder.configure(config);
+  }, [config, pressResponder]);
 
   // Reset the `pressResponder` when cleanup needs to occur. This is
   // a separate effect because we do not want to rest the responder when `config` changes.
-  useEffect(
-    () => {
-      return () => {
-        pressResponder.reset();
-      };
-    },
-    [pressResponder]
-  );
+  useEffect(() => {
+    return () => {
+      pressResponder.reset();
+    };
+  }, [pressResponder]);
 
   useDebugValue(config);
 

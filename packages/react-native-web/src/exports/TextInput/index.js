@@ -312,18 +312,15 @@ const TextInput = forwardRef<TextInputProps, *>((props, forwardedRef) => {
     }
   }
 
-  useLayoutEffect(
-    () => {
-      const node = hostRef.current;
-      if (node != null && selection != null) {
-        setSelection(node, selection);
-      }
-      if (document.activeElement === node) {
-        TextInputState._currentlyFocusedNode = node;
-      }
-    },
-    [hostRef, selection]
-  );
+  useLayoutEffect(() => {
+    const node = hostRef.current;
+    if (node != null && selection != null) {
+      setSelection(node, selection);
+    }
+    if (document.activeElement === node) {
+      TextInputState._currentlyFocusedNode = node;
+    }
+  }, [hostRef, selection]);
 
   const component = multiline ? 'textarea' : 'input';
   const classList = [classes.textinput];

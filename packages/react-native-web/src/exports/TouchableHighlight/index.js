@@ -104,33 +104,27 @@ function TouchableHighlight(props: Props, forwardedRef): React.Node {
     testOnly_pressed === true ? createExtraStyles(activeOpacity, underlayColor) : null
   );
 
-  const showUnderlay = useCallback(
-    () => {
-      if (!hasPressHandler(props)) {
-        return;
-      }
-      setExtraStyles(createExtraStyles(activeOpacity, underlayColor));
-      if (onShowUnderlay != null) {
-        onShowUnderlay();
-      }
-    },
-    [activeOpacity, onShowUnderlay, props, underlayColor]
-  );
+  const showUnderlay = useCallback(() => {
+    if (!hasPressHandler(props)) {
+      return;
+    }
+    setExtraStyles(createExtraStyles(activeOpacity, underlayColor));
+    if (onShowUnderlay != null) {
+      onShowUnderlay();
+    }
+  }, [activeOpacity, onShowUnderlay, props, underlayColor]);
 
-  const hideUnderlay = useCallback(
-    () => {
-      if (testOnly_pressed === true) {
-        return;
+  const hideUnderlay = useCallback(() => {
+    if (testOnly_pressed === true) {
+      return;
+    }
+    if (hasPressHandler(props)) {
+      setExtraStyles(null);
+      if (onHideUnderlay != null) {
+        onHideUnderlay();
       }
-      if (hasPressHandler(props)) {
-        setExtraStyles(null);
-        if (onHideUnderlay != null) {
-          onHideUnderlay();
-        }
-      }
-    },
-    [onHideUnderlay, props, testOnly_pressed]
-  );
+    }
+  }, [onHideUnderlay, props, testOnly_pressed]);
 
   const pressConfig = useMemo(
     () => ({

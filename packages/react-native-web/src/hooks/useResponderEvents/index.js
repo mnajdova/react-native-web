@@ -40,52 +40,46 @@ export default function useResponderEvents(hostRef: any, config: ResponderConfig
   // This is a separate effects so it doesn't run when the config changes.
   // On initial mount, attach global listeners if needed.
   // On unmount, remove node potentially attached to the Responder System.
-  React.useEffect(
-    () => {
-      ResponderSystem.attachListeners();
-      return () => {
-        ResponderSystem.removeNode(id);
-      };
-    },
-    [id]
-  );
+  React.useEffect(() => {
+    ResponderSystem.attachListeners();
+    return () => {
+      ResponderSystem.removeNode(id);
+    };
+  }, [id]);
 
   // Register and unregister with the Responder System as necessary
-  React.useEffect(
-    () => {
-      const {
-        onMoveShouldSetResponder,
-        onMoveShouldSetResponderCapture,
-        onScrollShouldSetResponder,
-        onScrollShouldSetResponderCapture,
-        onSelectionChangeShouldSetResponder,
-        onSelectionChangeShouldSetResponderCapture,
-        onStartShouldSetResponder,
-        onStartShouldSetResponderCapture
-      } = config;
+  React.useEffect(() => {
+    const {
+      onMoveShouldSetResponder,
+      onMoveShouldSetResponderCapture,
+      onScrollShouldSetResponder,
+      onScrollShouldSetResponderCapture,
+      onSelectionChangeShouldSetResponder,
+      onSelectionChangeShouldSetResponderCapture,
+      onStartShouldSetResponder,
+      onStartShouldSetResponderCapture
+    } = config;
 
-      const requiresResponderSystem =
-        onMoveShouldSetResponder != null ||
-        onMoveShouldSetResponderCapture != null ||
-        onScrollShouldSetResponder != null ||
-        onScrollShouldSetResponderCapture != null ||
-        onSelectionChangeShouldSetResponder != null ||
-        onSelectionChangeShouldSetResponderCapture != null ||
-        onStartShouldSetResponder != null ||
-        onStartShouldSetResponderCapture != null;
+    const requiresResponderSystem =
+      onMoveShouldSetResponder != null ||
+      onMoveShouldSetResponderCapture != null ||
+      onScrollShouldSetResponder != null ||
+      onScrollShouldSetResponderCapture != null ||
+      onSelectionChangeShouldSetResponder != null ||
+      onSelectionChangeShouldSetResponderCapture != null ||
+      onStartShouldSetResponder != null ||
+      onStartShouldSetResponderCapture != null;
 
-      const node = hostRef.current;
+    const node = hostRef.current;
 
-      if (requiresResponderSystem) {
-        ResponderSystem.addNode(id, node, config);
-        isAttachedRef.current = true;
-      } else if (isAttachedRef.current) {
-        ResponderSystem.removeNode(id);
-        isAttachedRef.current = false;
-      }
-    },
-    [config, hostRef, id]
-  );
+    if (requiresResponderSystem) {
+      ResponderSystem.addNode(id, node, config);
+      isAttachedRef.current = true;
+    } else if (isAttachedRef.current) {
+      ResponderSystem.removeNode(id);
+      isAttachedRef.current = false;
+    }
+  }, [config, hostRef, id]);
 
   React.useDebugValue({ isResponder: hostRef.current === ResponderSystem.getResponderNode() });
   React.useDebugValue(config);

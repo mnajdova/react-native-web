@@ -35,17 +35,14 @@ const ProgressBar = forwardRef<ProgressBarProps, *>((props, ref) => {
   const percentageProgress = progress * 100;
 
   const progressRef = useRef(null);
-  useEffect(
-    () => {
-      const width = indeterminate ? '25%' : `${percentageProgress}%`;
-      if (progressRef.current != null) {
-        progressRef.current.setNativeProps({
-          style: { width }
-        });
-      }
-    },
-    [indeterminate, percentageProgress, progressRef]
-  );
+  useEffect(() => {
+    const width = indeterminate ? '25%' : `${percentageProgress}%`;
+    if (progressRef.current != null) {
+      progressRef.current.setNativeProps({
+        style: { width }
+      });
+    }
+  }, [indeterminate, percentageProgress, progressRef]);
 
   return (
     <View
