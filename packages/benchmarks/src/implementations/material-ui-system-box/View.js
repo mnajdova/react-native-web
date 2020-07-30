@@ -13,6 +13,9 @@ const useStyles = makeStyles({
     flexBasis: 'auto',
     flexDirection: 'column',
     flexShrink: 0,
+    margin: 0,
+    padding: 0,
+    position: 'relative',
     // fix flexbox bugs
     minHeight: 0,
     minWidth: 0
@@ -21,7 +24,7 @@ const useStyles = makeStyles({
 
 function View(props) {
   const classes = useStyles();
-  return <Box {...props} m={0} p={0} position="relative" className={`${classes.root} ${props.className}`} />;
+  return <Box {...props} className={`${classes.root} ${props.className}`} />;
 }
 
 export default View;
