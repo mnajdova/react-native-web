@@ -4,6 +4,25 @@ import classnames from 'classnames';
 import View from './View';
 import { makeStyles } from '@material-ui/styles';
 
+const getColor = color => {
+  switch (color) {
+    case 0:
+      return '#14171A';
+    case 1:
+      return '#AAB8C2';
+    case 2:
+      return '#E6ECF0';
+    case 3:
+      return '#FFAD1F';
+    case 4:
+      return '#F45D22';
+    case 5:
+      return '#E0245E';
+    default:
+      return 'transparent';
+  }
+};
+
 const useStyles = makeStyles({
   outer: {
     alignSelf: 'flex-start',
@@ -12,24 +31,9 @@ const useStyles = makeStyles({
   row: {
     flexDirection: 'row'
   },
-  color0: {
-    backgroundColor: '#14171A'
-  },
-  color1: {
-    backgroundColor: '#AAB8C2'
-  },
-  color2: {
-    backgroundColor: '#E6ECF0'
-  },
-  color3: {
-    backgroundColor: '#FFAD1F'
-  },
-  color4: {
-    backgroundColor: '#F45D22'
-  },
-  color5: {
-    backgroundColor: '#E0245E'
-  },
+  background: (props) => ({
+    backgroundColor: getColor(props.color),
+  }),
   fixed: {
     width: 6,
     height: 6
@@ -37,12 +41,12 @@ const useStyles = makeStyles({
 });
 
 function Box({ color, fixed = false, layout = 'column', outer = false, ...other }) {
-  const classes = useStyles();
+  const classes = useStyles({ color });
 
   return (
     <View
       {...other}
-      className={classnames(classes[`color${color}`], {
+      className={classnames(classes.background, {
         [classes.fixed]: fixed,
         [classes.outer]: outer,
         [classes.row]: layout === 'row'
