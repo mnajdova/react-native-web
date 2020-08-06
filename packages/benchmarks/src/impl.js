@@ -2,7 +2,6 @@
 
 import { type Component } from 'react';
 import packageJson from '../package.json';
-
 const context = require.context('./implementations/', true, /index\.js$/);
 const { dependencies } = packageJson;
 
